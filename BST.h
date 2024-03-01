@@ -16,24 +16,25 @@ typedef struct {
 // prototypes
 
 void insertNode( BST *, int );
-/*
+
 void insertNode_R(TreeNodePtr * t,int value){
-  if(t==NULL){
-   t=new TreeNode;
-	 if(t){
-		t->leftPtr=NULL;
-		t->rightPtr=NULL;
-		t->data=value;
+  if(*t==NULL){
+   *t=(TreeNodePtr)malloc(sizeof(struct TreeNode));
+	 if(*t){
+		(*t)->leftPtr=NULL;
+		(*t)->rightPtr=NULL;
+		(*t)->data=value;
    }
   }
   else{
-     if(t->data>=value) //left
-        
+     if((*t)->data>=value) //left
+         insertNode_R(&(*t)->leftPtr,value);
      else //right
+         insertNode_R(&(*t)->rightPtr,value);
       
    }
 }
-*/
+
 void insertNode( BST *b, int value ){
 	 TreeNodePtr t =b->root,new_node;
 	 int inserted=0;
@@ -48,22 +49,30 @@ void insertNode( BST *b, int value ){
 while(!inserted){
    if(t->data >=value){
      /* move/insert to the left*/
-    
+         if(t->leftPtr==NULL) {
+            t->leftPtr=new_node;
+            inserted=1;
+         }
+         else t=t->leftPtr;
      }
   	 
-  }
+
    else{
 	      /* move/ insert to the right*/
-    
+         if(t->rightPtr==NULL) {
+            t->rightPtr=new_node;
+            inserted=1;
+         }
+         else t=t->rightPtr;
     }
 	}
    
   }//end while		
-  }//end else;
+  }//end else of new node;
   b->size++;
   }
   
-}//end function
+//end function
 
 
 void inOrder( TreeNodePtr treePtr )
@@ -78,3 +87,34 @@ void inOrder( TreeNodePtr treePtr )
       inOrder( treePtr->rightPtr ); //Recursion to the right
    } // end if                          
 } // end 
+
+void preOrder( TreeNodePtr treePtr )
+{
+   if ( treePtr != NULL ) {
+      printf("%3d",treePtr->data);
+      preOrder(treePtr->leftPtr);
+      preOrder(treePtr->rightPtr);
+   }
+}
+
+void postOrder( TreeNodePtr treePtr )
+{
+   if ( treePtr != NULL ) {
+      postOrder(treePtr->leftPtr);
+      postOrder(treePtr->rightPtr);
+      printf("%3d",treePtr->data);
+   }
+}
+
+void printTree(TreeNodePtr treePtr,int l)
+{
+   int i;
+   if( treePtr != NULL )
+   {
+      printTree(treePtr->rightPtr,l+1);
+      for(i=0;i<l;i++) printf("     ");
+      printf("%3d\n",treePtr->data);
+      printTree(treePtr->leftPtr,l+1);
+   }
+}
+
